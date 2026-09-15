@@ -53,3 +53,7 @@ No project license is asserted in this repository. Select a software license and
 ## Bronze enrichment audit
 
 See [ENRICHMENT_AUDIT.md](ENRICHMENT_AUDIT.md) for measured extraction gaps and the new source-preserving province/year panel. The panel is available through `python -m dengue_st_diagnostics.research_panel`; its screened gold features are for retrospective experiments.
+
+## Dengue and malaria case mining
+
+[MINING_AUDIT.md](MINING_AUDIT.md) documents the September 2026 disease-only collection, recovered weekly/monthly series, source-quality failures and remaining access gaps. [tools/README.md](tools/README.md) lists collectors and reproducible normalization commands. Raw files and case-data exports remain in the local lake and output directory; this repository contains the code and audit.

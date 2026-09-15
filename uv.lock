@@ -322,6 +322,9 @@ dev = [
     { name = "pytest" },
     { name = "ruff" },
 ]
+mining = [
+    { name = "rdata" },
+]
 
 [package.metadata]
 requires-dist = [
@@ -340,6 +343,7 @@ requires-dist = [
     { name = "pypdf", specifier = ">=5.1" },
     { name = "pytest", marker = "extra == 'dev'", specifier = ">=8.3" },
     { name = "pywavelets", specifier = ">=1.7" },
+    { name = "rdata", marker = "extra == 'mining'", specifier = ">=1.0" },
     { name = "requests", specifier = ">=2.32" },
     { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.9" },
     { name = "ruptures", specifier = ">=1.1.9" },
@@ -349,7 +353,7 @@ requires-dist = [
     { name = "statsmodels", specifier = ">=0.14" },
     { name = "xlrd", specifier = ">=2.0" },
 ]
-provides-extras = ["dev"]
+provides-extras = ["mining", "dev"]
 
 [[package]]
 name = "esda"
@@ -1315,6 +1319,22 @@ wheels = [
 ]
 
 [[package]]
+name = "rdata"
+version = "1.1.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "pandas" },
+    { name = "typing-extensions" },
+    { name = "xarray" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/c3/6f/4bf8fc3981569b0fb32815db86aef880b233305353a48d2c1770a29fe9cb/rdata-1.1.0.tar.gz", hash = "sha256:37c8b19e8be82d7d7acb36c6623bfeb7ab1d95d9380ec00a6c063f88b1f50e3a", size = 106564, upload-time = "2026-06-11T18:45:40.187Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/29/ef/acc15553b522a3710837520a76556958d533753d27e5ead18a8600159398/rdata-1.1.0-py3-none-any.whl", hash = "sha256:12efb7597725d6db6cc78d84eb522a9634008f8fce1c2733b7fd42b9013bc41f", size = 287685, upload-time = "2026-06-11T18:45:38.837Z" },
+]
+
+[[package]]
 name = "requests"
 version = "2.34.2"
 source = { registry = "https://pypi.org/simple" }
@@ -1700,6 +1720,21 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/6b/ff/b94878f8eed809ca042685276bcea9f24e8c2ca7c9653bb80bbb920a68a5/wrapt-2.3.0-cp313-cp313t-win_amd64.whl", hash = "sha256:c4bded758ad6f03b965830944a2f0bc5b2eb3767fe5a7310134315d1a6610e98", size = 82634, upload-time = "2026-07-28T06:05:18.026Z" },
     { url = "https://files.pythonhosted.org/packages/80/fb/663e1de5332a71685a729754312d327d4cada767c36e1c5a2db4c8de49e6/wrapt-2.3.0-cp313-cp313t-win_arm64.whl", hash = "sha256:d2cc64539da63e39ffb9c7ede849b6e8ddaaf7b3876b5cfb04efd85a5f3f4eb6", size = 81387, upload-time = "2026-07-28T06:05:19.417Z" },
     { url = "https://files.pythonhosted.org/packages/00/39/3daf9f47be208606586de4568ba6713db53ebc8fd7a575aea1fe57983b69/wrapt-2.3.0-py3-none-any.whl", hash = "sha256:d8c7ed08477429752b8c44991f40ad7838b18332a160698740a6bfbc10d998a2", size = 61866, upload-time = "2026-07-28T06:06:12.9Z" },
+]
+
+[[package]]
+name = "xarray"
+version = "2026.7.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy", version = "2.4.6", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "numpy", version = "2.5.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "packaging" },
+    { name = "pandas" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/ea/96/3f7bdd00e505ec3698903415b30135024703e017b28c6b61f98da3193b0d/xarray-2026.7.0.tar.gz", hash = "sha256:361b495928fdbf5b58d0969bb6775339019da5e93ca74d61ddf4eb5edd6ce604", size = 3145348, upload-time = "2026-07-09T17:38:26.515Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/57/5b/28365212062939d213802e5e5fe855cdb231e1c2a93254ba1690066504e3/xarray-2026.7.0-py3-none-any.whl", hash = "sha256:bf9dd130b93806dc78e90c1b7ac24851b31557b888674c53622235691cf21824", size = 1426778, upload-time = "2026-07-09T17:38:24.224Z" },
 ]
 
 [[package]]
