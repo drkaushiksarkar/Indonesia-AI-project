@@ -1,0 +1,274 @@
+{
+  "surface": "report",
+  "manifest": {
+    "version": 1,
+    "surface": "report",
+    "title": "Expanded Indonesian Univariate Forecastability Frontier",
+    "description": "Leakage-safe benchmark of 42 forecasting, intermittent-demand, transfer, ensemble, outbreak-detection, and risk-stratification algorithms across native Indonesian vector-borne disease series.",
+    "generatedAt": "2026-08-30T18:30:00+05:30",
+    "sources": [
+      {
+        "id": "frontier_lake",
+        "label": "Indonesia vector-borne disease medallion lake frontier run",
+        "query": {
+          "engine": "PostgreSQL",
+          "language": "sql",
+          "description": "Strict rolling-origin predictions, model metrics, learning curves, and native-grain series metadata.",
+          "executed_at": "2026-08-30T18:30:00+05:30",
+          "tables_used": [
+            "metadata.univariate_frontier_run",
+            "metadata.univariate_frontier_model",
+            "metadata.univariate_frontier_series",
+            "gold.univariate_frontier_fold",
+            "gold.univariate_frontier_model_metric",
+            "gold.univariate_frontier",
+            "gold.univariate_frontier_learning_curve",
+            "gold.univariate_frontier_aggregate"
+          ],
+          "filters": [
+            "frontier_run_id = 2105edf4-5f73-4977-b8d4-c7bf3e5aa59c",
+            "Robust and moderate parent-series tiers",
+            "Province-month dengue summaries exclude dependent temporal duplicates",
+            "Every target period occurs after its training endpoint"
+          ],
+          "metric_definitions": [
+            "MAE skill = 1 - model MAE / seasonal-naive MAE on identical origins",
+            "WIS skill = 1 - model weighted interval score / seasonal-naive weighted interval score",
+            "Library oracle = post-hoc best model per series, horizon, and task; it is not deployable",
+            "Online selector and online weighted ensemble use only errors available before each origin",
+            "Outbreak thresholds and risk tertiles are re-estimated from each training window"
+          ],
+          "sql": "select s.*, f.* from metadata.univariate_frontier_series s join gold.univariate_frontier_fold f using (frontier_run_id, series_id) where s.frontier_run_id = '2105edf4-5f73-4977-b8d4-c7bf3e5aa59c' and f.train_end < f.target_period"
+        }
+      }
+    ],
+    "cards": [
+      {
+        "id": "models",
+        "dataset": "headline",
+        "sourceId": "frontier_lake",
+        "metrics": [{"label": "Registered algorithms", "field": "models", "format": "number"}]
+      },
+      {
+        "id": "series",
+        "dataset": "headline",
+        "sourceId": "frontier_lake",
+        "metrics": [{"label": "Eligible native series", "field": "series", "format": "number"}]
+      },
+      {
+        "id": "folds",
+        "dataset": "headline",
+        "sourceId": "frontier_lake",
+        "metrics": [{"label": "Out-of-sample predictions", "field": "folds", "format": "compact"}]
+      },
+      {
+        "id": "lookahead",
+        "dataset": "headline",
+        "sourceId": "frontier_lake",
+        "metrics": [{"label": "Look-ahead rows", "field": "lookahead", "format": "number"}]
+      }
+    ],
+    "charts": [
+      {
+        "id": "point_skill",
+        "title": "Province-month dengue point-forecast skill",
+        "subtitle": "Median MAE reduction versus seasonal-naive across 34–35 series",
+        "type": "line",
+        "intent": "trend",
+        "dataset": "point_skill",
+        "sourceId": "frontier_lake",
+        "encodings": {
+          "x": {"field": "horizon", "type": "ordinal", "label": "Horizon (months)"},
+          "y": {"fields": ["median_ensemble", "online_selector", "online_weighted", "negative_binomial"], "type": "quantitative", "label": "MAE skill", "format": "percent"}
+        },
+        "valueFormat": "percent",
+        "referenceLines": [{"axis": "y", "value": 0, "label": "No improvement", "color": "neutral", "lineStyle": "dashed"}],
+        "layout": "full"
+      },
+      {
+        "id": "interval_skill",
+        "title": "Probabilistic skill improves, but intervals under-cover",
+        "subtitle": "Median WIS skill versus seasonal-naive for province-month dengue",
+        "type": "line",
+        "intent": "trend",
+        "dataset": "interval_skill",
+        "sourceId": "frontier_lake",
+        "encodings": {
+          "x": {"field": "horizon", "type": "ordinal", "label": "Horizon (months)"},
+          "y": {"fields": ["median_ensemble", "online_weighted", "negative_binomial"], "type": "quantitative", "label": "WIS skill", "format": "percent"}
+        },
+        "valueFormat": "percent",
+        "referenceLines": [{"axis": "y", "value": 0, "label": "No improvement", "color": "neutral", "lineStyle": "dashed"}],
+        "layout": "full"
+      },
+      {
+        "id": "coverage",
+        "title": "Empirical coverage of nominal 80% intervals",
+        "subtitle": "Province-month dengue medians; 0.80 is the calibration target",
+        "type": "line",
+        "intent": "trend",
+        "dataset": "coverage",
+        "sourceId": "frontier_lake",
+        "encodings": {
+          "x": {"field": "horizon", "type": "ordinal", "label": "Horizon (months)"},
+          "y": {"fields": ["median_ensemble", "online_weighted", "negative_binomial"], "type": "quantitative", "label": "Interval coverage", "format": "percent"}
+        },
+        "valueFormat": "percent",
+        "referenceLines": [{"axis": "y", "value": 0.8, "label": "Nominal 80%", "color": "neutral", "lineStyle": "dashed"}],
+        "layout": "full"
+      },
+      {
+        "id": "learning_curve",
+        "title": "Province-month dengue learning curve",
+        "subtitle": "Median one-month MAE skill at fixed available training histories",
+        "type": "line",
+        "intent": "trend",
+        "dataset": "learning_curve",
+        "sourceId": "frontier_lake",
+        "encodings": {
+          "x": {"field": "training_periods", "type": "ordinal", "label": "Available training periods"},
+          "y": {"fields": ["auto_ar", "boosted_stumps", "negative_binomial", "holt_winters"], "type": "quantitative", "label": "MAE skill", "format": "percent"}
+        },
+        "valueFormat": "percent",
+        "referenceLines": [{"axis": "y", "value": 0, "label": "No improvement", "color": "neutral", "lineStyle": "dashed"}],
+        "layout": "full"
+      },
+      {
+        "id": "frontier_wins",
+        "title": "Most frequent frontier winners",
+        "subtitle": "Wins across tasks, native series, and horizons",
+        "type": "horizontalBar",
+        "intent": "comparison",
+        "dataset": "frontier_wins",
+        "sourceId": "frontier_lake",
+        "encodings": {
+          "x": {"field": "model", "type": "nominal", "label": "Model"},
+          "y": {"field": "wins", "type": "quantitative", "label": "Wins"}
+        },
+        "valueFormat": "number",
+        "layout": "full"
+      }
+    ],
+    "tables": [
+      {
+        "id": "outbreak_models",
+        "title": "One-month province dengue outbreak performance",
+        "subtitle": "Median per-series metrics; alarm threshold evaluated at 0.50",
+        "dataset": "outbreak_models",
+        "sourceId": "frontier_lake",
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "model", "label": "Model", "type": "text"},
+          {"field": "auprc", "label": "AUPRC", "format": "number"},
+          {"field": "auroc", "label": "AUROC", "format": "number"},
+          {"field": "brier", "label": "Brier", "format": "number"},
+          {"field": "sensitivity", "label": "Sensitivity", "format": "percent"},
+          {"field": "specificity", "label": "Specificity", "format": "percent"},
+          {"field": "false_alarms", "label": "False alarms / 100", "format": "number"}
+        ]
+      },
+      {
+        "id": "facility_evidence",
+        "title": "Current facility-month deployment evidence",
+        "subtitle": "Strict one-month rolling-origin results for every facility series with usable folds",
+        "dataset": "facility_evidence",
+        "sourceId": "frontier_lake",
+        "density": "spacious",
+        "layout": "full",
+        "columns": [
+          {"field": "disease", "label": "Disease", "type": "text"},
+          {"field": "facility", "label": "Puskesmas", "type": "text"},
+          {"field": "metric", "label": "Metric", "type": "text"},
+          {"field": "periods", "label": "Months", "format": "number"},
+          {"field": "folds", "label": "Folds", "format": "number"},
+          {"field": "selector_skill", "label": "Online selector skill", "format": "percent"},
+          {"field": "weighted_skill", "label": "Online weighted skill", "format": "percent"}
+        ]
+      }
+    ],
+    "blocks": [
+      {"id": "title", "type": "markdown", "body": "# Expanded Indonesian Univariate Forecastability Frontier"},
+      {"id": "summary", "type": "markdown", "sourceId": "frontier_lake", "body": "## Technical summary\n\n**The benchmark is now broad enough to diagnose the univariate frontier, but it is not literally exhaustive.** It contains 42 algorithms spanning seasonal and level baselines, exponential smoothing, autoregression, count processes, intermittent demand, nonlinear learners, pooled transfer, adaptive ensembles, and classical outbreak detectors. Strict rolling-origin evaluation produced 129,759 out-of-sample predictions for 81 robust or moderate native-grain series with zero look-ahead rows.\n\n**For province-month dengue, the defensible deployable horizon remains roughly one to three months.** The online weighted ensemble achieved median MAE skill of 36.4% at one month, 18.0% at two, and 12.2% at three; it was effectively tied with seasonal-naive at six months. The negative-binomial INGARCH model was competitive, especially at two months, but no family dominated every series.\n\n**Puskesmas forecastability is still data-limited.** Only two dengue facility case series have 36 months and one malaria facility has 24 months. Their deployable skills are mixed, so a world-class facility model cannot yet be validated from the harvested open evidence alone."},
+      {"id": "headline", "type": "metric-strip", "cardIds": ["models", "series", "folds", "lookahead"]},
+      {"id": "scope", "type": "markdown", "sourceId": "frontier_lake", "body": "## What is comprehensive here\n\nThe library covers the established univariate families relevant to short, seasonal, overdispersed, zero-heavy surveillance series: naive and seasonal windows; SES, Holt, Holt-Winters, and Theta; regularized, log, automatic, harmonic, and local autoregressions; Poisson and negative-binomial INGARCH, hurdle, and regime switching; Croston, SBA, optimized Croston, TSB, ADIDA, and IMAPA; analog, kernel, tree, and multiscale nonlinear models; pooled target-only transfer; robust, adaptive, and online ensembles; and EARS, EWMA, CUSUM, Farrington, and Bayesian change detectors.\n\nIt is not mathematically exhaustive. Neural global forecasters, Gaussian processes, Bayesian structural time series, state-space count models, and covariate-driven spatiotemporal models are intentionally outside this univariate, dependency-light frontier. The stored fold predictions make those valid next-stage comparisons possible under identical origins."},
+      {"id": "point_text", "type": "markdown", "body": "## Useful point-forecast signal is concentrated at short horizons\n\nThe library oracle reaches median skill of 58.6% at one month and 41.5% at two months, but it chooses the winner after seeing test performance and is therefore an optimistic research ceiling. Deployment should be judged by pre-origin selection or fixed models. The simple pooled target-only ridge is strongly negative from one month onward, reaching -281.0% at twelve months; this is evidence against that transfer specification, not against global learning in general."},
+      {"id": "point_chart", "type": "chart", "chartId": "point_skill", "layout": "full"},
+      {"id": "prob_text", "type": "markdown", "body": "## Probability forecasts add value, but calibration needs work\n\nThe median ensemble and negative-binomial model improve weighted interval score at most horizons. Their nominal 80% intervals cover only about 66.7% to 75.0% of outcomes at the median province, so operational uncertainty bands are too narrow. Conformal recalibration or hierarchical residual pooling should be evaluated before the intervals are used for capacity decisions."},
+      {"id": "interval_chart", "type": "chart", "chartId": "interval_skill", "layout": "full"},
+      {"id": "coverage_chart", "type": "chart", "chartId": "coverage", "layout": "full"},
+      {"id": "outbreak_text", "type": "markdown", "body": "## Outbreak detection is a threshold-policy problem, not just a ranking problem\n\nAt one month, seasonal-naive has median AUPRC 0.833 and AUROC 0.875, while the adaptive ensembles reduce Brier error but recover only one third of outbreak months at the default threshold. EWMA produces no false alarms but has zero median sensitivity. None is an operational alarm policy by itself; thresholds must be chosen against explicit missed-outbreak and false-alarm costs."},
+      {"id": "outbreak_table", "type": "table", "tableId": "outbreak_models", "layout": "full"},
+      {"id": "risk_text", "type": "markdown", "body": "## Temporal risk-state classification is short-horizon only\n\nFor one-month province dengue, negative-binomial INGARCH achieves median macro F1 of 0.611 and balanced accuracy of 0.694; the median ensemble has ranked probability score 0.129. Macro F1 falls toward 0.40 by three months and roughly 0.25–0.34 by six to twelve months. These are within-location temporal burden states, not spatial risk ranks between provinces."},
+      {"id": "learning_text", "type": "markdown", "body": "## Most province-level learning occurs by about five years of monthly history\n\nAutomatic autoregression improves from 45.5% median skill with 24 periods to 56.5% with 60 periods and 56.0% with 120. Negative-binomial INGARCH reaches 53.0% at 60 and 53.9% at 120. This suggests a practical plateau near five years for these univariate province series, although the curve is observational because different history lengths imply different target periods."},
+      {"id": "learning_chart", "type": "chart", "chartId": "learning_curve", "layout": "full"},
+      {"id": "model_text", "type": "markdown", "body": "## Complexity does not dominate\n\nSeasonal-window averaging, analog matching, historical median, naive, log autoregression, and Holt-Winters are all frequent frontier winners. That diversity is a strong argument for compact ensembles and per-series validation. It is also a warning against choosing a model solely because it is newer or more complex."},
+      {"id": "model_chart", "type": "chart", "chartId": "frontier_wins", "layout": "full"},
+      {"id": "facility_text", "type": "markdown", "body": "## Facility evidence is insufficient for a reliable ceiling\n\nArjowinangun dengue shows modest positive one-month adaptive skill, while Kendalkerep dengue and the three Kendalkerep malaria metrics do not consistently beat seasonal-naive. With only 6–12 test origins, these estimates have high variance. Puskesmas deployment should retain seasonal-naive, pool uncertainty across comparable facilities, and require prospective evaluation while longer weekly or monthly histories accumulate."},
+      {"id": "facility_table", "type": "table", "tableId": "facility_evidence", "layout": "full"},
+      {"id": "method", "type": "markdown", "body": "## Validation design\n\nAll results use expanding-window rolling origins with at most twelve origins per horizon. Every transform, seasonal statistic, threshold, residual distribution, model choice, and ensemble weight is estimated from information available by the origin. Point forecasts are evaluated with MAE-derived skill and supporting scale-free errors; distributions use quantiles, weighted interval score, and coverage; outbreak tasks use AUPRC, AUROC, Brier score, sensitivity, specificity, and false alarms; ordinal risk uses ranked probability score, macro F1, and balanced accuracy. Learning curves repeat the one-step evaluation at fixed history lengths of 24, 36, 60, and 120 periods where available."},
+      {"id": "limits", "type": "markdown", "body": "## Limitations and interpretation\n\n- Cross-series medians summarize heterogeneous provinces and should not be read as a guarantee for a particular location.\n- Twelve rolling origins give limited precision for rare outbreaks and calibration.\n- Surveillance counts combine infection dynamics with diagnosis, care-seeking, reporting delay, revision, and intervention.\n- Province histories dominate the robust evidence; facility, annual ADM2 malaria, entomology, and serotype series remain too short or sparse for comparable conclusions.\n- Learning curves are not randomized experiments and can be influenced by which calendar periods become test targets.\n- The oracle frontier is a diagnostic ceiling only; deployable claims use fixed or pre-origin adaptive methods."},
+      {"id": "next", "type": "markdown", "body": "## Modeling implications\n\n1. Use seasonal-naive, negative-binomial INGARCH, and the online weighted ensemble as mandatory province-month comparators.\n2. Concentrate univariate operations on one- to three-month horizons; test climate, vector, mobility, intervention, serotype, and neighboring-area covariates beyond that range.\n3. Recalibrate prediction intervals with rolling conformal or hierarchical residual methods.\n4. Evaluate global and transfer models with facility-held-out and future-period-held-out validation; the failed target-only pooled ridge is the negative-control baseline.\n5. Keep every spatial and temporal grain native in the lake and join only through explicit crosswalks so modeling, not ETL, controls aggregation and disaggregation.\n6. Treat outbreak thresholds as utility decisions and validate them prospectively with local response teams."},
+      {"id": "questions", "type": "markdown", "body": "## Further questions\n\n- How much do climate, entomology, serotype, mobility, and intervention histories extend the one-to-three-month horizon?\n- Can global count transformers or hierarchical Bayesian state-space models borrow strength without negative transfer at unseen facilities?\n- How much real-time skill is lost when reporting delays and revisions are reconstructed?\n- Which facility network can provide at least five years of weekly or monthly confirmed-case history for prospective validation?"}
+    ]
+  },
+  "snapshot": {
+    "version": 1,
+    "generatedAt": "2026-08-30T18:30:00+05:30",
+    "status": "ready",
+    "datasets": {
+      "headline": [{"models": 42, "series": 81, "folds": 129759, "lookahead": 0}],
+      "point_skill": [
+        {"horizon": 1, "median_ensemble": 0.357, "online_selector": 0.242, "online_weighted": 0.364, "negative_binomial": 0.416},
+        {"horizon": 2, "median_ensemble": 0.186, "online_selector": 0.094, "online_weighted": 0.180, "negative_binomial": 0.230},
+        {"horizon": 3, "median_ensemble": 0.133, "online_selector": 0.038, "online_weighted": 0.122, "negative_binomial": 0.115},
+        {"horizon": 6, "median_ensemble": 0.015, "online_selector": 0.002, "online_weighted": 0.000, "negative_binomial": 0.014},
+        {"horizon": 12, "median_ensemble": 0.039, "online_selector": -0.011, "online_weighted": 0.024, "negative_binomial": 0.005}
+      ],
+      "interval_skill": [
+        {"horizon": 1, "median_ensemble": 0.416, "online_weighted": 0.402, "negative_binomial": 0.401},
+        {"horizon": 2, "median_ensemble": 0.256, "online_weighted": 0.225, "negative_binomial": 0.197},
+        {"horizon": 3, "median_ensemble": 0.149, "online_weighted": 0.132, "negative_binomial": 0.176},
+        {"horizon": 6, "median_ensemble": 0.036, "online_weighted": 0.004, "negative_binomial": 0.037},
+        {"horizon": 12, "median_ensemble": 0.070, "online_weighted": 0.044, "negative_binomial": 0.011}
+      ],
+      "coverage": [
+        {"horizon": 1, "median_ensemble": 0.750, "online_weighted": 0.750, "negative_binomial": 0.750},
+        {"horizon": 2, "median_ensemble": 0.750, "online_weighted": 0.667, "negative_binomial": 0.667},
+        {"horizon": 3, "median_ensemble": 0.667, "online_weighted": 0.667, "negative_binomial": 0.667},
+        {"horizon": 6, "median_ensemble": 0.750, "online_weighted": 0.667, "negative_binomial": 0.667},
+        {"horizon": 12, "median_ensemble": 0.667, "online_weighted": 0.667, "negative_binomial": 0.667}
+      ],
+      "learning_curve": [
+        {"training_periods": 24, "auto_ar": 0.455, "boosted_stumps": 0.262, "negative_binomial": 0.490, "holt_winters": 0.085},
+        {"training_periods": 36, "auto_ar": 0.397, "boosted_stumps": 0.328, "negative_binomial": 0.515, "holt_winters": 0.183},
+        {"training_periods": 60, "auto_ar": 0.565, "boosted_stumps": 0.443, "negative_binomial": 0.530, "holt_winters": 0.470},
+        {"training_periods": 120, "auto_ar": 0.560, "boosted_stumps": 0.559, "negative_binomial": 0.539, "holt_winters": 0.471}
+      ],
+      "frontier_wins": [
+        {"model": "Seasonal-window average", "wins": 91},
+        {"model": "Analog k-NN", "wins": 89},
+        {"model": "Historical median", "wins": 78},
+        {"model": "Naive", "wins": 75},
+        {"model": "Log autoregression", "wins": 72},
+        {"model": "Holt-Winters additive", "wins": 71},
+        {"model": "Markov switching", "wins": 59},
+        {"model": "Kernel RBF ridge", "wins": 48},
+        {"model": "Boosted stumps", "wins": 46},
+        {"model": "Automatic autoregression", "wins": 45}
+      ],
+      "outbreak_models": [
+        {"model": "Seasonal naive", "auprc": 0.833, "auroc": 0.875, "brier": 0.112, "sensitivity": 0.667, "specificity": 0.909, "false_alarms": 8.333},
+        {"model": "Online selector", "auprc": 0.768, "auroc": 0.815, "brier": 0.118, "sensitivity": 0.333, "specificity": 0.917, "false_alarms": 8.333},
+        {"model": "Online weighted ensemble", "auprc": 0.700, "auroc": 0.850, "brier": 0.108, "sensitivity": 0.333, "specificity": 0.917, "false_alarms": 8.333},
+        {"model": "Farrington", "auprc": 0.750, "auroc": 0.875, "brier": 0.124, "sensitivity": 0.500, "specificity": 0.909, "false_alarms": 8.333},
+        {"model": "EWMA", "auprc": 0.500, "auroc": 0.714, "brier": 0.148, "sensitivity": 0.000, "specificity": 1.000, "false_alarms": 0.000}
+      ],
+      "facility_evidence": [
+        {"disease": "Dengue", "facility": "Arjowinangun", "metric": "Cases", "periods": 36, "folds": 12, "selector_skill": 0.099, "weighted_skill": 0.188},
+        {"disease": "Dengue", "facility": "Kendalkerep", "metric": "Cases", "periods": 36, "folds": 12, "selector_skill": -0.209, "weighted_skill": -0.095},
+        {"disease": "Malaria", "facility": "Kendalkerep", "metric": "Three reported metrics", "periods": 24, "folds": 6, "selector_skill": -0.621, "weighted_skill": -0.341}
+      ]
+    }
+  }
+}

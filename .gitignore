@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.env.*
+.idea/
+.pytest_cache/
+.ruff_cache/
+.venv/
+__pycache__/
+*.py[cod]
+*.sql.gz
+*.tar.gz
+*.zip
+outputs/
+output/

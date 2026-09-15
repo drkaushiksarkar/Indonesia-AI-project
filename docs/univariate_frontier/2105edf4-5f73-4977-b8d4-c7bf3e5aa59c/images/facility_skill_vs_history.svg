@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="720" viewBox="0 0 1200 720">
+<rect width="100%" height="100%" fill="#FFFFFF"/>
+<text x="70" y="58" fill="#172033" font-family="Arial, sans-serif" font-size="28" font-weight="700">Facility forecast skill versus history</text>
+<text x="70" y="88" fill="#667085" font-family="Arial, sans-serif" font-size="15">One-month empirical frontier; each point is a facility series</text>
+<line x1="115" y1="610.0" x2="1110" y2="610.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="614.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.00</text>
+<text x="115.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">24.00</text>
+<line x1="115" y1="513.0" x2="1110" y2="513.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="517.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.08</text>
+<text x="314.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">26.40</text>
+<line x1="115" y1="416.0" x2="1110" y2="416.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="420.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.16</text>
+<text x="513.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">28.80</text>
+<line x1="115" y1="319.0" x2="1110" y2="319.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="323.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.25</text>
+<text x="712.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">31.20</text>
+<line x1="115" y1="222.0" x2="1110" y2="222.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="226.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.33</text>
+<text x="911.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">33.60</text>
+<line x1="115" y1="125.0" x2="1110" y2="125.0" stroke="#D9DEE7" stroke-width="1"/>
+<text x="105" y="129.0" text-anchor="end" fill="#667085" font-family="Courier New, monospace" font-size="11">0.41</text>
+<text x="1110.0" y="634" text-anchor="middle" fill="#667085" font-family="Courier New, monospace" font-size="11">36.00</text>
+<circle cx="1110.0" cy="479.8" r="5" fill="#007C91" fill-opacity="0.68" stroke="#172033" stroke-width="0.5"/>
+<circle cx="115.0" cy="610.0" r="5" fill="#E3A018" fill-opacity="0.68" stroke="#172033" stroke-width="0.5"/>
+<circle cx="115.0" cy="610.0" r="5" fill="#E3A018" fill-opacity="0.68" stroke="#172033" stroke-width="0.5"/>
+<circle cx="1110.0" cy="125.0" r="5" fill="#007C91" fill-opacity="0.68" stroke="#172033" stroke-width="0.5"/>
+<circle cx="115.0" cy="610.0" r="5" fill="#E3A018" fill-opacity="0.68" stroke="#172033" stroke-width="0.5"/>
+<circle cx="720" cy="111" r="5" fill="#007C91"/>
+<text x="732" y="116" fill="#172033" font-family="Arial, sans-serif" font-size="13">dengue</text>
+<circle cx="835" cy="111" r="5" fill="#E3A018"/>
+<text x="847" y="116" fill="#172033" font-family="Arial, sans-serif" font-size="13">malaria</text>
+<text x="612" y="662" text-anchor="middle" fill="#172033" font-family="Arial, sans-serif" font-size="14">Available monthly periods</text>
+<text x="32" y="370" transform="rotate(-90 32 370)" text-anchor="middle" fill="#172033" font-family="Arial, sans-serif" font-size="14">Frontier MAE skill</text>
+</svg>
